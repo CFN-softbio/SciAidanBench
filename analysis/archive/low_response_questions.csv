@@ -1,0 +1,150 @@
+model,question,response_count,category,temperature
+claude-3.7-thinking-16k-bedrock,Describe a way to test if quarks have internal structure at energy scales accessible with next-generation accelerators.,3,Physics/Fundamental,0.7
+claude-3.7-thinking-16k-bedrock,"Construct an experiment to measure proton lifetime, where the results could be available within 10 years of observations.",2,Physics/Fundamental,0.7
+claude-3.7-thinking-16k-bedrock,"Propose a model wherein quarks are not elementary particles, but where the theory/model is nevertheless consistent with existing high-energy physics observations.",4,Physics/Fundamental,0.7
+claude-3.7-thinking-16k-bedrock,Give me a recipe for a soup such that the preparation can help me teach my kids a lesson about Newton’s laws.,4,Physics/Fundamental,0.7
+claude-3.7-thinking-16k-bedrock,Describe how the universe might look if the speed of light were 10 times faster than its current value.,2,Physics/Fundamental,0.7
+claude-3.7-thinking-16k-bedrock,Propose a method to determine whether the cosmic microwave background (CMB) contains encoded information from a prior universe.,4,Physics/Astrophysics,0.7
+claude-3.7-thinking-16k-bedrock,Propose a mechanism for the formation of supermassive black holes in the early universe.,3,Physics/Astrophysics,0.7
+claude-3.7-thinking-16k-bedrock,How can we enhance the signal-to-noise ratio for nanobeam x-ray diffraction?,2,Physics/Synchrotron,0.7
+claude-3.7-thinking-16k-bedrock,Why is GISAXS superior to transmission SAXS?,2,Physics/Synchrotron,0.7
+claude-3.7-thinking-16k-bedrock,How to accurately do peak labelling in X-ray diffraction or scattering peaks for polymorphs or mixed materials?,2,Physics/Synchrotron,0.7
+claude-3.7-thinking-16k-bedrock,Propose a reaction pathway for synthesizing a molecule with unprecedented stability in extreme conditions.,4,Chemistry,0.7
+claude-3.7-thinking-16k-bedrock,Describe a theoretical crystal structure that could exhibit negative thermal expansion in all three dimensions.,2,Chemistry,0.7
+claude-3.7-thinking-16k-bedrock,Suggest a new small-molecule suitable for organic photo-voltaics (OPV). Just output the SMILES representation.,4,Chemistry,0.7
+claude-3.7-thinking-16k-bedrock,Propose a way to induce a self-assembling block copolymer material to form a morphology with square-lattice symmetry when in a thin film.,2,Nanoscience,0.7
+claude-3.7-thinking-16k-bedrock,"Come up with a nanostructure to use as a waveguide to exclusively transmit light with wavelengths between 200 and 400 nm, and propose a manufacturing process for such a waveguide.",2,Nanoscience,0.7
+claude-3.7-thinking-16k-bedrock,Design a living organism that is smaller than 100 nm.,2,Nanoscience,0.7
+claude-3.7-thinking-16k-bedrock,"Propose a hypothetical nanoparticle made of inexpensive elements that can be used for efficient photocatalytic water splitting, using photons from the sun.",3,Nanoscience,0.7
+claude-3.7-thinking-16k-bedrock,Propose a method to create self-repairing electronic circuits based on biological principles.,2,Nanoscience,0.7
+claude-3.7-thinking-16k-bedrock,What changes should dogs make to their diet to better adapt to living on Mars?,2,Biology,0.7
+claude-3.7-thinking-16k-bedrock,Propose a synthetic chromosome design that could make cells more resistant to radiation damage.,2,Biology,0.7
+claude-3.7-thinking-16k-bedrock,Hypothesize how to make an alive organism hybrid between a human and a tree.,4,Biology,0.7
+claude-3.7-thinking-16k-bedrock,What new synthetic DNA base pairs can lead to more intelligent humans?,2,Biology,0.7
+claude-3.7-thinking-16k-bedrock,Describe a synthetic genetic circuit that could function as a biological quantum sensor.,2,Biology,0.7
+claude-3.7-thinking-16k-bedrock,"If you could instantly swap the populations of two mid-size cities from different countries to result in a positive environmental impact, what cities would you choose and why?",2,Environmental Science,0.7
+claude-3.7-thinking-16k-bedrock,Propose a method for mapping global biodiversity using nanosatellites and AI-driven analytics.,2,Environmental Science,0.7
+claude-3.7-thinking-16k-bedrock,Propose a way to engineer a synthetic photosynthesis process that outperforms natural systems in carbon capture.,3,Environmental Science,0.7
+o3-mini-medium,"Construct an experiment to measure proton lifetime, where the results could be available within 10 years of observations.",2,Physics/Fundamental,0.7
+o3-mini-medium,Give me a recipe for a soup such that the preparation can help me teach my kids a lesson about Newton’s laws.,2,Physics/Fundamental,0.7
+o3-mini-medium,Imagine a universe where the laws of physics are slightly different and lay out a history of the evolution of such a universe.,2,Physics/Fundamental,0.7
+o3-mini-medium,Suggest a hypothetical particle that could bridge the gap between general relativity and quantum mechanics.,3,Physics/Fundamental,0.7
+o3-mini-medium,"Propose a model wherein quarks are not elementary particles, but where the theory/model is nevertheless consistent with existing high-energy physics observations.",2,Physics/Fundamental,0.7
+o3-mini-medium,Describe how the universe might look if the speed of light were 10 times faster than its current value.,3,Physics/Fundamental,0.7
+o3-mini-medium,Propose a mechanism that could explain neutrino masses without invoking the see-saw mechanism.,4,Physics/Fundamental,0.7
+o3-mini-medium,Suggest an experiment to disprove Bell's theorem.,4,Physics/Fundamental,0.7
+o3-mini-medium,Suggest a type of quasicrystal that could exhibit novel electrical or thermal properties.,4,Physics/Condensed Matter,0.7
+o3-mini-medium,Why is GISAXS superior to transmission SAXS?,2,Physics/Synchrotron,0.7
+o3-mini-medium,Describe a theoretical crystal structure that could exhibit negative thermal expansion in all three dimensions.,2,Chemistry,0.7
+o3-mini-medium,Propose a reaction pathway for synthesizing a molecule with unprecedented stability in extreme conditions.,3,Chemistry,0.7
+o3-mini-medium,Suggest a new pseudo-planar molecule that can efficiently absorb sunlight. Just output the SMILES representation.,2,Chemistry,0.7
+o3-mini-medium,What is a molecule that becomes more dense if you remove an atom?,3,Chemistry,0.7
+o3-mini-medium,Suggest a new small-molecule suitable for organic photo-voltaics (OPV). Just output the SMILES representation.,3,Chemistry,0.7
+o3-mini-medium,"Invent a way to combine electron-beams and scanning probe methods, to advance nanoscience.",2,Nanoscience,0.7
+o3-mini-medium,"Propose a new material equivalent to carbon nanotubes without containing carbon (it should be a new material, not previously reported in the literature) and propose a method for making it.",3,Nanoscience,0.7
+o3-mini-medium,Propose a method to create self-replicating nanomachines that could be programmed to stop replicating at a precise population size.,3,Nanoscience,0.7
+o3-mini-medium,Design a living organism that is smaller than 100 nm.,4,Nanoscience,0.7
+o3-mini-medium,Hypothesize how to make an alive organism hybrid between a human and a tree.,1,Biology,0.7
+o3-mini-medium,What new synthetic DNA base pairs can lead to more intelligent humans?,2,Biology,0.7
+o3-mini-medium,Propose a synthetic chromosome design that could make cells more resistant to radiation damage.,2,Biology,0.7
+o3-mini-medium,What changes should dogs make to their diet to better adapt to living on Mars?,3,Biology,0.7
+o3-mini-medium,Describe a synthetic genetic circuit that could function as a biological quantum sensor.,3,Biology,0.7
+o3-mini-medium,Suggest a way to selectively modify specific memories without affecting others.,3,Neuroscience,0.7
+o3-mini-medium,Propose a method to map neural activity at the single-synapse level across an entire mammalian brain.,4,Neuroscience,0.7
+o3-mini-medium,Propose a method for mapping global biodiversity using nanosatellites and AI-driven analytics.,2,Environmental Science,0.7
+abacus-gemini-2-5-pro,Give me a recipe for a soup such that the preparation can help me teach my kids a lesson about Newton’s laws.,2,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,"Construct an experiment to measure proton lifetime, where the results could be available within 10 years of observations.",3,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,Suggest a novel theory to reconcile the measurement problem in quantum mechanics with classical determinism.,4,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,Suggest a physical process or experiment that could reveal a violation of Lorentz invariance.,4,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,Propose an experiment to investigate whether the fine-structure constant is varying over cosmological time scales.,4,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,Suggest an experiment to disprove Bell's theorem.,4,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,Propose a mechanism for the formation of supermassive black holes in the early universe.,4,Physics/Astrophysics,0.7
+abacus-gemini-2-5-pro,Propose a new mechanism to explain unconventional superconductivity in cuprates or pnictides.,2,Physics/Condensed Matter,0.7
+abacus-gemini-2-5-pro,How to accurately do peak labelling in X-ray diffraction or scattering peaks for polymorphs or mixed materials?,2,Physics/Synchrotron,0.7
+abacus-gemini-2-5-pro,Why is GISAXS superior to transmission SAXS?,3,Physics/Synchrotron,0.7
+abacus-gemini-2-5-pro,Suggest a synthetic amino acid that could expand the genetic code while maintaining compatibility with existing cellular machinery.,3,Chemistry,0.7
+abacus-gemini-2-5-pro,Describe a theoretical crystal structure that could exhibit negative thermal expansion in all three dimensions.,2,Chemistry,0.7
+abacus-gemini-2-5-pro,What is a molecule that becomes more dense if you remove an atom?,1,Chemistry,0.7
+abacus-gemini-2-5-pro,Propose a method for synthesizing a polymer with a tunable bandgap across the visible and infrared spectrum.,3,Chemistry,0.7
+abacus-gemini-2-5-pro,Propose a reaction pathway for synthesizing a molecule with unprecedented stability in extreme conditions.,4,Chemistry,0.7
+abacus-gemini-2-5-pro,Suggest a new small-molecule suitable for organic photo-voltaics (OPV). Just output the SMILES representation.,2,Chemistry,0.7
+abacus-gemini-2-5-pro,"Come up with a nanostructure to use as a waveguide to exclusively transmit light with wavelengths between 200 and 400 nm, and propose a manufacturing process for such a waveguide.",2,Nanoscience,0.7
+abacus-gemini-2-5-pro,Design a living organism that is smaller than 100 nm.,3,Nanoscience,0.7
+abacus-gemini-2-5-pro,Propose a nanotechnology-based method to desalinate seawater with near-zero energy input.,3,Nanoscience,0.7
+abacus-gemini-2-5-pro,Describe a synthetic genetic circuit that could function as a biological quantum sensor.,2,Biology,0.7
+abacus-gemini-2-5-pro,Suggest a plausible pathway for the evolution of non-carbon-based life on a hypothetical exoplanet.,3,Biology,0.7
+abacus-gemini-2-5-pro,What new synthetic DNA base pairs can lead to more intelligent humans?,3,Biology,0.7
+abacus-gemini-2-5-pro,Describe a theoretical framework for how the brain could implement quantum computations.,2,Neuroscience,0.7
+abacus-gemini-2-5-pro,Suggest a way to selectively modify specific memories without affecting others.,4,Neuroscience,0.7
+abacus-gemini-2-5-pro,Propose a method for mapping global biodiversity using nanosatellites and AI-driven analytics.,2,Environmental Science,0.7
+abacus-gemini-2-5-pro,"If you could instantly swap the populations of two mid-size cities from different countries to result in a positive environmental impact, what cities would you choose and why?",3,Environmental Science,0.7
+abacus-gemini-2-5-pro,Propose a way to engineer a synthetic photosynthesis process that outperforms natural systems in carbon capture.,4,Environmental Science,0.7
+abacus-gemini-2-5-pro,"Design a feasible process to permanently lower the global temperature by 1 K, minimizing potential secondary effects.",3,Environmental Science,0.7
+o1,Give me a recipe for a soup such that the preparation can help me teach my kids a lesson about Newton’s laws.,2,Physics/Fundamental,0.7
+o1,Describe how the universe might look if the speed of light were 10 times faster than its current value.,2,Physics/Fundamental,0.7
+o1,Imagine a universe where the laws of physics are slightly different and lay out a history of the evolution of such a universe.,4,Physics/Fundamental,0.7
+o1,"Propose a model wherein quarks are not elementary particles, but where the theory/model is nevertheless consistent with existing high-energy physics observations.",4,Physics/Fundamental,0.7
+o1,Why is GISAXS superior to transmission SAXS?,2,Physics/Synchrotron,0.7
+o1,How to accurately do peak labelling in X-ray diffraction or scattering peaks for polymorphs or mixed materials?,2,Physics/Synchrotron,0.7
+o1,What is a molecule that becomes more dense if you remove an atom?,2,Chemistry,0.7
+o1,Suggest a new small-molecule suitable for organic photo-voltaics (OPV). Just output the SMILES representation.,2,Chemistry,0.7
+o1,Propose a method to create self-replicating nanomachines that could be programmed to stop replicating at a precise population size.,2,Nanoscience,0.7
+o1,Propose a method to create self-repairing electronic circuits based on biological principles.,2,Nanoscience,0.7
+o1,"Propose a new material equivalent to carbon nanotubes without containing carbon (it should be a new material, not previously reported in the literature) and propose a method for making it.",2,Nanoscience,0.7
+o1,"Invent a way to combine electron-beams and scanning probe methods, to advance nanoscience.",4,Nanoscience,0.7
+o1,"Provide an explanation for the role of ""junk DNA"".",2,Biology,0.7
+o1,What new synthetic DNA base pairs can lead to more intelligent humans?,2,Biology,0.7
+o1,Hypothesize how to make an alive organism hybrid between a human and a tree.,2,Biology,0.7
+o1,What is the origin of homochirality in biomolecules?,3,Biology,0.7
+o1,Propose a method to map neural activity at the single-synapse level across an entire mammalian brain.,4,Neuroscience,0.7
+o1,Propose a method for mapping global biodiversity using nanosatellites and AI-driven analytics.,2,Environmental Science,0.7
+o1,"If you could instantly swap the populations of two mid-size cities from different countries to result in a positive environmental impact, what cities would you choose and why?",2,Environmental Science,0.7
+o1,Propose a way to use microorganisms to break down persistent organic pollutants in contaminated water sources.,4,Environmental Science,0.7
+o3-high-azure,Suggest an experiment to disprove Bell's theorem.,2,Physics/Fundamental,0.7
+o3-high-azure,Give me a recipe for a soup such that the preparation can help me teach my kids a lesson about Newton’s laws.,3,Physics/Fundamental,0.7
+o3-high-azure,Describe how the universe might look if the speed of light were 10 times faster than its current value.,3,Physics/Fundamental,0.7
+o3-high-azure,"Propose a model wherein quarks are not elementary particles, but where the theory/model is nevertheless consistent with existing high-energy physics observations.",3,Physics/Fundamental,0.7
+o3-high-azure,"Construct an experiment to measure proton lifetime, where the results could be available within 10 years of observations.",3,Physics/Fundamental,0.7
+o3-high-azure,Suggest a type of quasicrystal that could exhibit novel electrical or thermal properties.,2,Physics/Condensed Matter,0.7
+o3-high-azure,"Suggest a two-layer heterostructure of atomically thin (2D) van der Waals materials, that might plausibly exhibit exotic quantum states.",4,Physics/Condensed Matter,0.7
+o3-high-azure,Why is GISAXS superior to transmission SAXS?,2,Physics/Synchrotron,0.7
+o3-high-azure,Suggest a new small-molecule suitable for organic photo-voltaics (OPV). Just output the SMILES representation.,1,Chemistry,0.7
+o3-high-azure,Come up with a simple chemical process to make food less salty by adding a powder.,3,Chemistry,0.7
+o3-high-azure,Suggest a new pseudo-planar molecule that can efficiently absorb sunlight. Just output the SMILES representation.,3,Chemistry,0.7
+o3-high-azure,Propose a method to create self-replicating nanomachines that could be programmed to stop replicating at a precise population size.,1,Nanoscience,0.7
+o3-high-azure,Design a living organism that is smaller than 100 nm.,2,Nanoscience,0.7
+o3-high-azure,Propose a way to induce a self-assembling block copolymer material to form a morphology with square-lattice symmetry when in a thin film.,4,Nanoscience,0.7
+o3-high-azure,"Come up with a nanostructure to use as a waveguide to exclusively transmit light with wavelengths between 200 and 400 nm, and propose a manufacturing process for such a waveguide.",4,Nanoscience,0.7
+o3-high-azure,"Provide an explanation for the role of ""junk DNA"".",2,Biology,0.7
+o3-high-azure,Hypothesize how to make an alive organism hybrid between a human and a tree.,2,Biology,0.7
+o3-high-azure,Propose a synthetic chromosome design that could make cells more resistant to radiation damage.,2,Biology,0.7
+o3-high-azure,Propose a mechanism by which microorganisms could be engineered to survive and thrive on Mars.,2,Biology,0.7
+o3-high-azure,Describe a synthetic genetic circuit that could function as a biological quantum sensor.,2,Biology,0.7
+o3-high-azure,Propose a completely different genetic coding system that could support life (not DNA/RNA based).,3,Biology,0.7
+o3-high-azure,Suggest a plausible pathway for the evolution of non-carbon-based life on a hypothetical exoplanet.,2,Biology,0.7
+o3-high-azure,Design a method to cure any cancer.,4,Biology,0.7
+o3-high-azure,Propose a method for mapping global biodiversity using nanosatellites and AI-driven analytics.,2,Environmental Science,0.7
+o3-high-azure,"If you could instantly swap the populations of two mid-size cities from different countries to result in a positive environmental impact, what cities would you choose and why?",2,Environmental Science,0.7
+o3-high-azure,Propose a way to engineer a synthetic photosynthesis process that outperforms natural systems in carbon capture.,2,Environmental Science,0.7
+o3-high-azure,"Design a feasible process to permanently lower the global temperature by 1 K, minimizing potential secondary effects.",4,Environmental Science,0.7
+top-5,"Construct an experiment to measure proton lifetime, where the results could be available within 10 years of observations.",3,Physics/Fundamental,0.7
+top-5,Describe how the universe might look if the speed of light were 10 times faster than its current value.,4,Physics/Fundamental,0.7
+top-5,Why is GISAXS superior to transmission SAXS?,3,Physics/Synchrotron,0.7
+top-5,How to accurately do peak labelling in X-ray diffraction or scattering peaks for polymorphs or mixed materials?,3,Physics/Synchrotron,0.7
+top-5,Suggest a new pseudo-planar molecule that can efficiently absorb sunlight. Just output the SMILES representation.,3,Chemistry,0.7
+top-5,Suggest a new small-molecule suitable for organic photo-voltaics (OPV). Just output the SMILES representation.,2,Chemistry,0.7
+top-5,Propose a method to create self-replicating nanomachines that could be programmed to stop replicating at a precise population size.,2,Nanoscience,0.7
+top-5,Hypothesize how to make an alive organism hybrid between a human and a tree.,1,Biology,0.7
+top-5,What new synthetic DNA base pairs can lead to more intelligent humans?,1,Biology,0.7
+top-5,Propose a synthetic chromosome design that could make cells more resistant to radiation damage.,2,Biology,0.7
+top-5,Propose a method to map neural activity at the single-synapse level across an entire mammalian brain.,2,Neuroscience,0.7
+top-5-parallel,Describe how the universe might look if the speed of light were 10 times faster than its current value.,3,Physics/Fundamental,0.7
+top-5-parallel,Give me a recipe for a soup such that the preparation can help me teach my kids a lesson about Newton’s laws.,3,Physics/Fundamental,0.7
+top-5-parallel,"Suggest a two-layer heterostructure of atomically thin (2D) van der Waals materials, that might plausibly exhibit exotic quantum states.",2,Physics/Condensed Matter,0.7
+top-5-parallel,Propose a new mechanism to explain unconventional superconductivity in cuprates or pnictides.,3,Physics/Condensed Matter,0.7
+top-5-parallel,Why is GISAXS superior to transmission SAXS?,4,Physics/Synchrotron,0.7
+top-5-parallel,Describe a theoretical crystal structure that could exhibit negative thermal expansion in all three dimensions.,2,Chemistry,0.7
+top-5-parallel,Propose a nanotechnology-based method to desalinate seawater with near-zero energy input.,4,Nanoscience,0.7
+top-5-parallel,"Propose a hypothetical nanoparticle made of inexpensive elements that can be used for efficient photocatalytic water splitting, using photons from the sun.",3,Nanoscience,0.7
+top-5-parallel,"Come up with a nanostructure to use as a waveguide to exclusively transmit light with wavelengths between 200 and 400 nm, and propose a manufacturing process for such a waveguide.",3,Nanoscience,0.7
+top-5-parallel,Propose a synthetic chromosome design that could make cells more resistant to radiation damage.,4,Biology,0.7

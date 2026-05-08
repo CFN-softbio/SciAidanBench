@@ -1,0 +1,7 @@
+*.json
+*.pyc
+__pycache__/
+
+# Track the per-model chunks (needed for reproduction), but keep the full
+# aggregated results_final.json out of git since it exceeds GitHub's 100 MB limit.
+!results/per_model/*.json

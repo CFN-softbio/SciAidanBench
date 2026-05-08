@@ -1,0 +1,83 @@
+model,question,response_count,category,temperature
+claude-3.7-thinking-16k-bedrock,"Suggest a way to detect exoplanets with conditions suitable for life, using only ground-based telescopes.",104,Physics/Astrophysics,0.7
+claude-3.7-thinking-16k-bedrock,"Invent a new x-ray detector technology for soft x-rays, that improves upon the current state-of-the-art.",108,Physics/Synchrotron,0.7
+claude-3.7-thinking-16k-bedrock,"Propose a metal surface, and a nanoparticle (material, shape, etc.) sitting on that surface, where the combination of these two might lead to enhanced catalytic activity, for some set of chemical reactions.",110,Chemistry,0.7
+claude-3.7-thinking-16k-bedrock,Suggest a new functional group for organic molecules that might exhibit novel reactivity or properties.,106,Chemistry,0.7
+claude-3.7-thinking-16k-bedrock,Suggest a novel catalyst for water splitting that does not rely on rare or expensive elements.,109,Chemistry,0.7
+claude-3.7-thinking-16k-bedrock,Suggest a catalytic system for converting CO2 into a useful chemical product at ambient temperature and pressure.,152,Chemistry,0.7
+claude-3.7-thinking-16k-bedrock,"Invent a way to combine electron-beams and scanning probe methods, to advance nanoscience.",103,Nanoscience,0.7
+claude-3.7-thinking-16k-bedrock,Name an application for quantum dots.,169,Nanoscience,0.7
+claude-3.7-thinking-16k-bedrock,"Suggest a new method for crystallizing difficult-to-crystalize proteins, for subsequent protein crystallography measurements.",151,Biology,0.7
+claude-3.7-thinking-16k-bedrock,Propose a new method for mapping the connectome of a complex brain.,131,Neuroscience,0.7
+claude-3.7-thinking-16k-bedrock,Give an example of a feedback loop in nature that yields counterintuitive results in environmental policy.,124,Environmental Science,0.7
+o3-mini-medium,Describe a way to test for the existence of extra dimensions beyond the usual three spatial dimensions.,114,Physics/Fundamental,0.7
+o3-mini-medium,Propose a new type of liquid crystal phase with unique optical properties.,114,Chemistry,0.7
+o3-mini-medium,Propose an application for 3D nanoscale superlattices formed from DNA origami blocks with central vacancies ('cages').,140,Nanoscience,0.7
+o3-mini-medium,Invent an application for zeolites.,203,Nanoscience,0.7
+abacus-gemini-2-5-pro,"Suggest a practical, real-world application for Bose-Einstein condensates (BECs).",105,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,Describe a way to test for the existence of extra dimensions beyond the usual three spatial dimensions.,123,Physics/Fundamental,0.7
+abacus-gemini-2-5-pro,Propose a material that might be a high-temperature superconductor.,151,Physics/Condensed Matter,0.7
+abacus-gemini-2-5-pro,Describe a new type of chemical reaction that has not yet been discovered but will be essential in 100 years.,102,Chemistry,0.7
+abacus-gemini-2-5-pro,Invent a new polymerization method.,155,Chemistry,0.7
+abacus-gemini-2-5-pro,Propose a material that would be appropriate for use in mechanical meta-material designs.,116,Nanoscience,0.7
+abacus-gemini-2-5-pro,Suggest an improvement to state-of-the-art electron microscopes.,111,Nanoscience,0.7
+abacus-gemini-2-5-pro,Propose an application for optical-wavelength meta-materials.,165,Nanoscience,0.7
+abacus-gemini-2-5-pro,How could we accelerate density functional theory (DFT) calculations?,218,Nanoscience,0.7
+o1,Suggest a way to improve spatial resolution in synchrotron-based imaging experiments.,118,Physics/Synchrotron,0.7
+o1,Propose a material that would be appropriate for use in mechanical meta-material designs.,104,Nanoscience,0.7
+o1,Propose an application for optical-wavelength meta-materials.,104,Nanoscience,0.7
+o1,Invent an application for zeolites.,138,Nanoscience,0.7
+o1,Name an application for quantum dots.,133,Nanoscience,0.7
+o1,Suggest an improvement to state-of-the-art electron microscopes.,222,Nanoscience,0.7
+o3-high-azure,Point out a single counter-intuitive result/prediction of relativity (special or general).,109,Physics/Fundamental,0.7
+o3-high-azure,"Describe a layer/type of multiverse, beyond those already specified by Max Tegmark's 4-level description (Hubble volumes, quantum branches, inflationary bubbles, and mathematical realities).",120,Physics/Fundamental,0.7
+o3-high-azure,"Invent a possible use for hybrid thin films, where an inorganic vapor-phase precursor is infiltrated into an organic (typically polymeric) thin film.",120,Nanoscience,0.7
+o3-high-azure,Suggest an improvement to state-of-the-art electron microscopes.,114,Nanoscience,0.7
+o3-high-azure,Invent an application for zeolites.,147,Nanoscience,0.7
+o3-high-azure,Propose a novel use for the all-optical formation of surface relief gratings (SRG) in azobenzene containing polymeric (azo-polymer) thin films.,159,Nanoscience,0.7
+o3-high-azure,Suggest a scalable approach to repurpose industrial waste into building materials or other high-value products.,103,Environmental Science,0.7
+top-5,"Suggest a practical, real-world application for Bose-Einstein condensates (BECs).",102,Physics/Fundamental,0.7
+top-5,"Describe a layer/type of multiverse, beyond those already specified by Max Tegmark's 4-level description (Hubble volumes, quantum branches, inflationary bubbles, and mathematical realities).",125,Physics/Fundamental,0.7
+top-5,"Propose a way to identify signs of artificial structures (e.g., Dyson spheres) around distant stars.",158,Physics/Astrophysics,0.7
+top-5,How can we enhance the signal-to-noise ratio for nanobeam x-ray diffraction?,148,Physics/Synchrotron,0.7
+top-5,Suggest a new lattice pattern for a synchrotron accelerator.,149,Physics/Synchrotron,0.7
+top-5,"Suggest a new class of metal-organic frameworks (MOFs) with dynamic, switchable pore sizes.",118,Chemistry,0.7
+top-5,Propose a new type of liquid crystal phase with unique optical properties.,125,Chemistry,0.7
+top-5,Suggest a novel NMR pulse sequence.,106,Chemistry,0.7
+top-5,Invent a new polymerization method.,209,Chemistry,0.7
+top-5,Propose an application for optical-wavelength meta-materials.,129,Nanoscience,0.7
+top-5,How could we accelerate density functional theory (DFT) calculations?,124,Nanoscience,0.7
+top-5,Suggest an improvement to state-of-the-art electron microscopes.,129,Nanoscience,0.7
+top-5,"Suggest a new scanning probe measurement modality, beyond the known ones (STM, AFM, NSOM, MIM, etc.).",130,Nanoscience,0.7
+top-5,"Invent a possible use for hybrid thin films, where an inorganic vapor-phase precursor is infiltrated into an organic (typically polymeric) thin film.",137,Nanoscience,0.7
+top-5,Suggest a nanoscale system that could mimic a biological motor or pump.,154,Nanoscience,0.7
+top-5,Propose a novel use for the all-optical formation of surface relief gratings (SRG) in azobenzene containing polymeric (azo-polymer) thin films.,163,Nanoscience,0.7
+top-5,Invent an application for zeolites.,174,Nanoscience,0.7
+top-5,Propose a way to achieve high-resolution 3D printing of nanostructures.,195,Nanoscience,0.7
+top-5,Propose a bio-inspired computing architecture that could match brain efficiency.,127,Neuroscience,0.7
+top-5,Suggest a scalable approach to repurpose industrial waste into building materials or other high-value products.,134,Environmental Science,0.7
+top-5,Suggest a new approach to mitigate the effects of climate change on ocean ecosystems.,161,Environmental Science,0.7
+top-5-parallel,Suggest a way to measure the distribution of dark matter on small (sub-galactic) scales.,127,Physics/Astrophysics,0.7
+top-5-parallel,Suggest a type of quasicrystal that could exhibit novel electrical or thermal properties.,141,Physics/Condensed Matter,0.7
+top-5-parallel,How can we enhance the signal-to-noise ratio for nanobeam x-ray diffraction?,119,Physics/Synchrotron,0.7
+top-5-parallel,Suggest a new lattice pattern for a synchrotron accelerator.,165,Physics/Synchrotron,0.7
+top-5-parallel,Suggest a way to improve spatial resolution in synchrotron-based imaging experiments.,193,Physics/Synchrotron,0.7
+top-5-parallel,Invent a new polymerization method.,120,Chemistry,0.7
+top-5-parallel,Suggest a hypothetical molecule with a configuration that could allow for molecular logic gates.,102,Chemistry,0.7
+top-5-parallel,"Suggest a new class of metal-organic frameworks (MOFs) with dynamic, switchable pore sizes.",160,Chemistry,0.7
+top-5-parallel,Suggest a catalytic system for converting CO2 into a useful chemical product at ambient temperature and pressure.,226,Chemistry,0.7
+top-5-parallel,Propose a new type of liquid crystal phase with unique optical properties.,291,Chemistry,0.7
+top-5-parallel,How could we accelerate density functional theory (DFT) calculations?,103,Nanoscience,0.7
+top-5-parallel,Propose a way to achieve dynamic reconfigurability in DNA origami structures.,127,Nanoscience,0.7
+top-5-parallel,"Suggest a new scanning probe measurement modality, beyond the known ones (STM, AFM, NSOM, MIM, etc.).",119,Nanoscience,0.7
+top-5-parallel,Propose an application for 3D nanoscale superlattices formed from DNA origami blocks with central vacancies ('cages').,344,Nanoscience,0.7
+top-5-parallel,"Invent a possible use for hybrid thin films, where an inorganic vapor-phase precursor is infiltrated into an organic (typically polymeric) thin film.",275,Nanoscience,0.7
+top-5-parallel,Name an application for quantum dots.,316,Nanoscience,0.7
+top-5-parallel,Invent an application for zeolites.,682,Nanoscience,0.7
+top-5-parallel,Imagine an alternative type of life that is not carbon-based.,129,Biology,0.7
+top-5-parallel,"Provide an explanation for the role of ""junk DNA"".",137,Biology,0.7
+top-5-parallel,What changes should dogs make to their diet to better adapt to living on Mars?,172,Biology,0.7
+top-5-parallel,"Suggest a new method for crystallizing difficult-to-crystalize proteins, for subsequent protein crystallography measurements.",145,Biology,0.7
+top-5-parallel,Propose a bio-inspired computing architecture that could match brain efficiency.,149,Neuroscience,0.7
+top-5-parallel,Propose a way to use microorganisms to break down persistent organic pollutants in contaminated water sources.,109,Environmental Science,0.7
+top-5-parallel,Suggest a new approach to mitigate the effects of climate change on ocean ecosystems.,224,Environmental Science,0.7
