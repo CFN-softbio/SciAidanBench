@@ -97,10 +97,7 @@ export OPENAI_API_KEY="..."
 # Azure OpenAI 
 export AZURE_API_KEY="..."
 export AZURE_API_BASE="https://your-resource.openai.azure.com/"
-export AZURE_o1_API_KEY="..."
-export AZURE_o1_API_BASE="..."
-export AZURE_API_KEY_OLD="..."
-export AZURE_API_BASE_OLD="..."
+export AZURE_API_KEY="..."
 
 # AWS Bedrock 
 export AWS_ACCESS_KEY_ID="..."
