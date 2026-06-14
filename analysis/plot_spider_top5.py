@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 from math import pi
 from model_config import get_model_shortname
+from utils import _valid_responses
 
 def load_and_analyze_json(file_path):
     """Load JSON and analyze normalized response counts across all domains"""
@@ -47,7 +48,7 @@ def load_and_analyze_json(file_path):
                                 
                                 for question, responses in threshold_data.items():
                                     if isinstance(responses, list):
-                                        total_responses += len(responses)
+                                        total_responses += len(_valid_responses(responses))
                                         total_questions += 1
                                 
                                 # Calculate normalized response count

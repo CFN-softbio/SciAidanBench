@@ -8,6 +8,7 @@ import os
 from scipy import interpolate
 from scipy.stats import gaussian_kde
 from model_config import get_model_color, AXIS_LABEL_FONTSIZE, TICK_LABEL_FONTSIZE, get_model_shortname
+from utils import _valid_responses
 
 def get_response_count_distribution(data, model_name):
     """Get the distribution of response counts for a specific model."""
@@ -18,7 +19,7 @@ def get_response_count_distribution(data, model_name):
             if "models" in obj and model_name in obj["models"]:
                 model_data = obj["models"][model_name].get("0.7", {})
                 for question, responses in model_data.items():
-                    num_responses = len(responses)
+                    num_responses = len(_valid_responses(responses))
                     response_count_dist[num_responses] = response_count_dist.get(num_responses, 0) + 1
             else:
                 for value in obj.values():

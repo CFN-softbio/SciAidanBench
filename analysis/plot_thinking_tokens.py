@@ -5,6 +5,7 @@ For OpenAI models, uses reasoning_tokens (already in tokens).
 """
 
 from utils import *
+from utils import _valid_responses
 import argparse
 
 # Try to import tiktoken for token counting
@@ -79,7 +80,7 @@ def get_model_average_thoughts_lengths_per_question_with_tokens(data):
                             responses_with_reasoning = 0
                             
                             # Process each answer for this question
-                            for answer in question_answers:
+                            for answer in _valid_responses(question_answers):
                                 # Use reasoning_tokens for o3 models
                                 if "reasoning_tokens" in answer and answer["reasoning_tokens"] is not None:
                                     total_reasoning_tokens += answer["reasoning_tokens"]
@@ -104,7 +105,7 @@ def get_model_average_thoughts_lengths_per_question_with_tokens(data):
                         responses_with_thoughts = 0
                         
                         # Process each answer for this question
-                        for answer in question_answers:
+                        for answer in _valid_responses(question_answers):
                             if "thoughts" in answer:
                                 thoughts_text = answer["thoughts"]
                                 
@@ -152,7 +153,7 @@ def get_model_average_thoughts_lengths_per_question_with_tokens(data):
                                     responses_with_reasoning = 0
                                     
                                     # Process each answer for this question
-                                    for answer in question_answers:
+                                    for answer in _valid_responses(question_answers):
                                         # Use reasoning_tokens for o3 models
                                         if "reasoning_tokens" in answer and answer["reasoning_tokens"] is not None:
                                             total_reasoning_tokens += answer["reasoning_tokens"]
@@ -177,7 +178,7 @@ def get_model_average_thoughts_lengths_per_question_with_tokens(data):
                                 responses_with_thoughts = 0
                                 
                                 # Process each answer for this question
-                                for answer in question_answers:
+                                for answer in _valid_responses(question_answers):
                                     if "thoughts" in answer:
                                         thoughts_text = answer["thoughts"]
                                         

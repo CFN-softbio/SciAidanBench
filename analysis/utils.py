@@ -10,6 +10,27 @@ import numpy as np
 TOTAL_QUESTIONS = 155
 
 
+_THRESHOLD_STOPS = {
+    "coherence_threshold",
+    "embedding_dissimilarity_threshold",
+    "llm_dissimilarity_threshold",
+}
+
+
+def _valid_responses(responses):
+    """Drop the answer that ended a streak by hitting a coherence/dissimilarity
+    threshold. The benchmark records that answer with a threshold-named
+    `stopping_condition`; including it inflates response counts and biases
+    per-answer averages.
+
+    Mid-list `stopping_condition: "error"` / `"content_error"` rows are kept —
+    those are transient API errors logged on otherwise valid scored answers
+    that the benchmark recovered from."""
+    return [
+        r for r in responses if r.get("stopping_condition") not in _THRESHOLD_STOPS
+    ]
+
+
 from enum import Enum
 
 
@@ -937,11 +958,18 @@ def calculate_model_stats(data):
                 model = model.strip()
                 for temp_data in model_data.values():
                     for question_responses in temp_data.values():
-                        rc = len(question_responses)
+                        # Track stopping conditions before filtering them out
+                        for resp in question_responses:
+                            if resp.get("stopping_condition"):
+                                model_metrics[model]["stopping_conditions"][
+                                    resp["stopping_condition"]
+                                ] += 1
+                        valid = _valid_responses(question_responses)
+                        rc = len(valid)
                         total_responses[model] += rc
                         category_responses[category][model] += rc
                         response_counts[model].append(rc)  # track
-                        for resp in question_responses:
+                        for resp in valid:
                             model_metrics[model]["coherence_sum"] += resp[
                                 "coherence_score"
                             ]
@@ -953,10 +981,6 @@ def calculate_model_stats(data):
                                     "llm_dissimilarity_score"
                                 ]
                             model_metrics[model]["response_count"] += 1
-                            if resp.get("stopping_condition"):
-                                model_metrics[model]["stopping_conditions"][
-                                    resp["stopping_condition"]
-                                ] += 1
 
         else:
             # we've already flattened above; handle that list
@@ -964,22 +988,8 @@ def calculate_model_stats(data):
                 model = model.strip()
                 for temp_data in model_data.values():
                     for question_responses in temp_data.values():
-                        rc = len(question_responses)
-                        total_responses[model] += rc
-                        category_responses[category][model] += rc
-                        response_counts[model].append(rc)  # track
+                        # Track stopping conditions before filtering them out
                         for resp in question_responses:
-                            model_metrics[model]["coherence_sum"] += resp[
-                                "coherence_score"
-                            ]
-                            model_metrics[model]["embedding_sum"] += resp[
-                                "embedding_dissimilarity_score"
-                            ]
-                            if "llm_dissimilarity_score" in resp:
-                                model_metrics[model]["llm_sum"] += resp[
-                                    "llm_dissimilarity_score"
-                                ]
-                            model_metrics[model]["response_count"] += 1
                             if resp.get("stopping_condition"):
                                 # special o3-mini rule
                                 if not (
@@ -989,6 +999,23 @@ def calculate_model_stats(data):
                                     model_metrics[model]["stopping_conditions"][
                                         resp["stopping_condition"]
                                     ] += 1
+                        valid = _valid_responses(question_responses)
+                        rc = len(valid)
+                        total_responses[model] += rc
+                        category_responses[category][model] += rc
+                        response_counts[model].append(rc)  # track
+                        for resp in valid:
+                            model_metrics[model]["coherence_sum"] += resp[
+                                "coherence_score"
+                            ]
+                            model_metrics[model]["embedding_sum"] += resp[
+                                "embedding_dissimilarity_score"
+                            ]
+                            if "llm_dissimilarity_score" in resp:
+                                model_metrics[model]["llm_sum"] += resp[
+                                    "llm_dissimilarity_score"
+                                ]
+                            model_metrics[model]["response_count"] += 1
 
     # Build final stats, now including std-dev of per-question response counts
     model_stats = {}
@@ -1057,7 +1084,7 @@ def get_model_response_counts_sciab(data, model_order=None):
                 model = model.strip()
                 for temp in model_data.values():
                     for question_responses in temp.values():
-                        response_counts[model].append(len(question_responses))
+                        response_counts[model].append(len(_valid_responses(question_responses)))
 
         # case 2: domain is subdivided into subdomains
         else:
@@ -1068,7 +1095,7 @@ def get_model_response_counts_sciab(data, model_order=None):
                     model = model.strip()
                     for temp in model_data.values():
                         for question_responses in temp.values():
-                            response_counts[model].append(len(question_responses))
+                            response_counts[model].append(len(_valid_responses(question_responses)))
 
     # Convert to regular dict
     result_dict = dict(response_counts)
@@ -1137,7 +1164,7 @@ def get_model_response_counts_by_domain(
                 model = model.strip()
                 for temp in model_data.values():
                     for question_responses in temp.values():
-                        response_counts[model].append(len(question_responses))
+                        response_counts[model].append(len(_valid_responses(question_responses)))
 
         # Case 2: Domain has subdomains
         else:
@@ -1159,7 +1186,7 @@ def get_model_response_counts_by_domain(
                     model = model.strip()
                     for temp in model_data.values():
                         for question_responses in temp.values():
-                            response_counts[model].append(len(question_responses))
+                            response_counts[model].append(len(_valid_responses(question_responses)))
 
             # If no subdomain specified, include all subdomains in this domain
             else:
@@ -1170,7 +1197,7 @@ def get_model_response_counts_by_domain(
                         model = model.strip()
                         for temp in model_data.values():
                             for question_responses in temp.values():
-                                response_counts[model].append(len(question_responses))
+                                response_counts[model].append(len(_valid_responses(question_responses)))
 
     # If no domain specified, include all domains and subdomains (same as original function)
     else:
@@ -1181,7 +1208,7 @@ def get_model_response_counts_by_domain(
                     model = model.strip()
                     for temp in model_data.values():
                         for question_responses in temp.values():
-                            response_counts[model].append(len(question_responses))
+                            response_counts[model].append(len(_valid_responses(question_responses)))
 
             # Case 2: Domain has subdomains
             else:
@@ -1192,7 +1219,7 @@ def get_model_response_counts_by_domain(
                         model = model.strip()
                         for temp in model_data.values():
                             for question_responses in temp.values():
-                                response_counts[model].append(len(question_responses))
+                                response_counts[model].append(len(_valid_responses(question_responses)))
 
     # Convert to regular dict
     result_dict = dict(response_counts)
@@ -1296,7 +1323,7 @@ def get_model_response_counts_nab(data, model_order=None):
         for temp_data in model_data.values():
             # Iterate through questions
             for question, responses in temp_data.items():
-                response_counts[standardized_name].append(len(responses))
+                response_counts[standardized_name].append(len(_valid_responses(responses)))
 
     # Convert to regular dict
     result_dict = dict(response_counts)
@@ -1395,7 +1422,9 @@ def get_question_counts(data, question):
             for model_name, model_data in domain_data["models"].items():
                 for temp, temp_data in model_data.items():
                     if question in temp_data and model_name in model_counts:
-                        model_counts[model_name] = len(temp_data[question])
+                        model_counts[model_name] = len(
+                            _valid_responses(temp_data[question])
+                        )
         else:
             # Handle subdomains
             for subdomain_name, subdomain_data in domain_data.items():
@@ -1404,7 +1433,9 @@ def get_question_counts(data, question):
                     for model_name, model_data in subdomain_data["models"].items():
                         for temp, temp_data in model_data.items():
                             if question in temp_data and model_name in model_counts:
-                                model_counts[model_name] = len(temp_data[question])
+                                model_counts[model_name] = len(
+                                    _valid_responses(temp_data[question])
+                                )
                 # Case 2: Subdomain contains sub-subdomains
                 elif isinstance(subdomain_data, dict):
                     for (
@@ -1424,7 +1455,7 @@ def get_question_counts(data, question):
                                         and model_name in model_counts
                                     ):
                                         model_counts[model_name] = len(
-                                            temp_data[question]
+                                            _valid_responses(temp_data[question])
                                         )
 
         # Get counts in the specified order
@@ -1464,7 +1495,7 @@ def get_model_average_answer_lengths(data):
                     # Process each question
                     for question_answers in temp_data.values():
                         # Process each answer
-                        for answer in question_answers:
+                        for answer in _valid_responses(question_answers):
                             answer_length = len(answer["answer"])
                             model_stats[model_name]["total_length"] += answer_length
                             model_stats[model_name]["answer_count"] += 1
@@ -1485,7 +1516,7 @@ def get_model_average_answer_lengths(data):
                             # Process each question
                             for question_answers in temp_data.values():
                                 # Process each answer
-                                for answer in question_answers:
+                                for answer in _valid_responses(question_answers):
                                     answer_length = len(answer["answer"])
                                     model_stats[model_name]["total_length"] += answer_length
                                     model_stats[model_name]["answer_count"] += 1
@@ -1527,7 +1558,7 @@ def get_model_average_answer_lengths_words(data):
                     # Process each question
                     for question_answers in temp_data.values():
                         # Process each answer
-                        for answer in question_answers:
+                        for answer in _valid_responses(question_answers):
                             # Count words by splitting on whitespace
                             word_count = len(answer["answer"].split())
                             model_stats[model_name]["total_words"] += word_count
@@ -1549,7 +1580,7 @@ def get_model_average_answer_lengths_words(data):
                             # Process each question
                             for question_answers in temp_data.values():
                                 # Process each answer
-                                for answer in question_answers:
+                                for answer in _valid_responses(question_answers):
                                     # Count words by splitting on whitespace
                                     word_count = len(answer["answer"].split())
                                     model_stats[model_name]["total_words"] += word_count
@@ -1594,7 +1625,7 @@ def get_model_average_thoughts_lengths(data):
                     # Process each question
                     for question_answers in temp_data.values():
                         # Process each answer
-                        for answer in question_answers:
+                        for answer in _valid_responses(question_answers):
                             # Only process if thoughts exist
                             if "thoughts" in answer:
                                 thoughts_length = len(answer["thoughts"])
@@ -1617,7 +1648,7 @@ def get_model_average_thoughts_lengths(data):
                             # Process each question
                             for question_answers in temp_data.values():
                                 # Process each answer
-                                for answer in question_answers:
+                                for answer in _valid_responses(question_answers):
                                     # Only process if thoughts exist
                                     if "thoughts" in answer:
                                         thoughts_length = len(answer["thoughts"])
@@ -1667,7 +1698,7 @@ def get_model_average_thoughts_lengths_per_question(data):
                         responses_with_thoughts = 0
                         
                         # Process each answer for this question
-                        for answer in question_answers:
+                        for answer in _valid_responses(question_answers):
                             # Handle thoughts field - if it doesn't exist, use 0
                             if "thoughts" in answer:
                                 thoughts_length = len(answer["thoughts"])
@@ -1703,7 +1734,7 @@ def get_model_average_thoughts_lengths_per_question(data):
                                 responses_with_thoughts = 0
                                 
                                 # Process each answer for this question
-                                for answer in question_answers:
+                                for answer in _valid_responses(question_answers):
                                     # Only process if thoughts exist
                                     if "thoughts" in answer:
                                         thoughts_length = len(answer["thoughts"])
@@ -1776,7 +1807,7 @@ def get_model_average_thoughts_lengths_per_question_o3_sep(data):
                             responses_with_reasoning = 0
                             
                             # Process each answer for this question
-                            for answer in question_answers:
+                            for answer in _valid_responses(question_answers):
                                 # Use reasoning_tokens instead of thoughts
                                 if "reasoning_tokens" in answer and answer["reasoning_tokens"] is not None:
                                     reasoning_tokens = answer["reasoning_tokens"]
@@ -1803,7 +1834,7 @@ def get_model_average_thoughts_lengths_per_question_o3_sep(data):
                                 responses_with_reasoning = 0
                                 
                                 # Process each answer for this question
-                                for answer in question_answers:
+                                for answer in _valid_responses(question_answers):
                                     # Use reasoning_tokens instead of thoughts
                                     if "reasoning_tokens" in answer and answer["reasoning_tokens"] is not None:
                                         reasoning_tokens = answer["reasoning_tokens"]
@@ -1843,7 +1874,7 @@ def get_model_average_thoughts_lengths_per_question_o3_sep(data):
                             responses_with_reasoning = 0
                             
                             # Process each answer for this question
-                            for answer in question_answers:
+                            for answer in _valid_responses(question_answers):
                                 # Use reasoning_tokens for o3 models
                                 if "reasoning_tokens" in answer and answer["reasoning_tokens"] is not None:
                                     total_reasoning_tokens += answer["reasoning_tokens"]
@@ -1868,7 +1899,7 @@ def get_model_average_thoughts_lengths_per_question_o3_sep(data):
                         responses_with_thoughts = 0
                         
                         # Process each answer for this question
-                        for answer in question_answers:
+                        for answer in _valid_responses(question_answers):
                             # Handle thoughts field - if it doesn't exist, use 0
                             if "thoughts" in answer:
                                 thoughts_length = len(answer["thoughts"])
@@ -1906,7 +1937,7 @@ def get_model_average_thoughts_lengths_per_question_o3_sep(data):
                                     responses_with_reasoning = 0
                                     
                                     # Process each answer for this question
-                                    for answer in question_answers:
+                                    for answer in _valid_responses(question_answers):
                                         # Use reasoning_tokens for o3 models
                                         if "reasoning_tokens" in answer and answer["reasoning_tokens"] is not None:
                                             total_reasoning_tokens += answer["reasoning_tokens"]
@@ -1931,7 +1962,7 @@ def get_model_average_thoughts_lengths_per_question_o3_sep(data):
                                 responses_with_thoughts = 0
                                 
                                 # Process each answer for this question
-                                for answer in question_answers:
+                                for answer in _valid_responses(question_answers):
                                     # Only process if thoughts exist
                                     if "thoughts" in answer:
                                         thoughts_length = len(answer["thoughts"])
