@@ -3,6 +3,7 @@ from functools import lru_cache
 from retry import retry
 
 from openai import AzureOpenAI
+from anthropic import Anthropic
 from ollama_utils import execute_llm_call
 import abacusai
 from llm_manager import LLMManager
@@ -153,6 +154,130 @@ def chat_with_model(
         )
 
         return response
+
+    elif model == "claude-opus-5":
+        # Served over the Anthropic Messages protocol on Azure AI Foundry; the
+        # Azure OpenAI endpoint exposes this model too but rejects reasoning.effort.
+        client = Anthropic(
+            api_key=os.environ.get("ANTHROPIC_FOUNDRY_API_KEY"),
+            base_url=os.environ.get("ANTHROPIC_FOUNDRY_BASE_URL"),
+        )
+
+        # temperature is pinned to 1 because adaptive thinking rejects any other value
+        message = client.messages.create(
+            model="claude-opus-5",
+            max_tokens=16000,
+            temperature=1,
+            messages=[{"role": "user", "content": prompt}],
+            extra_body={
+                "thinking": {"type": "adaptive"},
+                "output_config": {"effort": "high"},
+            },
+        )
+
+        usage = message.usage.model_dump()
+        return {
+            # thinking blocks come back encrypted (signature only), so no text to keep
+            "thinking": "",
+            "response": "".join(b.text for b in message.content if b.type == "text"),
+            "reasoning_tokens": usage.get("output_tokens_details", {}).get(
+                "thinking_tokens"
+            ),
+        }
+
+    elif model == "gpt-5.6-sol":
+        client = AzureOpenAI(
+            api_key=os.environ.get("AZURE_API_KEY"),
+            api_version="2025-04-01-preview",
+            azure_endpoint=os.environ.get("AZURE_API_BASE"),
+            azure_deployment="gpt-5.6-sol",
+        )
+
+        response = client.responses.create(
+            input=prompt,
+            model="gpt-5.6-sol",
+            reasoning={"effort": "high", "summary": "detailed"},
+        )
+
+        thoughts = ""
+        answer = ""
+        # matched by type rather than index: the reasoning block is absent at low effort
+        for item in response.output:
+            if item.type == "reasoning" and item.summary:
+                thoughts = "\n".join(s.text for s in item.summary)
+            elif item.type == "message":
+                answer = item.content[0].text
+
+        return {
+            "thinking": thoughts,
+            "response": answer,
+            "reasoning_tokens": getattr(
+                response.usage.output_tokens_details, "reasoning_tokens", None
+            ),
+        }
+
+    elif model == "claude-3.5":
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise ValueError("ANTHROPIC_API_KEY environment variable not set")
+        client = Anthropic(api_key=api_key)
+
+        # Make the API call
+        try:
+            message = client.messages.create(
+                model="claude-3-5-sonnet-20241022",  # or "claude-2.1" or other model versions
+                max_tokens=1000,
+                temperature=0.7,
+                system="You are a helpful AI assistant.",
+                messages=[{"role": "user", "content": prompt}],
+            )
+
+            return message.content[0].text
+
+        except Exception as e:
+            raise Exception(f"Error calling Anthropic API: {str(e)}")
+
+    elif model == "claude-3.7":
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise ValueError("ANTHROPIC_API_KEY environment variable not set")
+        client = Anthropic(api_key=api_key)
+
+        # Make the API call
+        try:
+            message = client.messages.create(
+                model="claude-3-7-sonnet-20250219",  # or "claude-2.1" or other model versions
+                max_tokens=20000,
+                temperature=0.7,
+                system="You are a helpful AI assistant.",
+                messages=[{"role": "user", "content": prompt}],
+            )
+
+            return message.content[0].text
+
+        except Exception as e:
+            raise Exception(f"Error calling Anthropic API: {str(e)}")
+
+    elif model == "claude-3.7-thinking-8k":
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise ValueError("ANTHROPIC_API_KEY environment variable not set")
+        client = Anthropic(api_key=api_key)
+
+        # Make the API call
+        try:
+            message = client.messages.create(
+                model="claude-3-7-sonnet-20250219",  # or "claude-2.1" or other model versions
+                max_tokens=20000,
+                temperature=1,
+                system="You are a helpful AI assistant.",
+                messages=[{"role": "user", "content": prompt}],
+                thinking={"type": "enabled", "budget_tokens": 8000},
+            )
+            return message
+
+        except Exception as e:
+            raise Exception(f"Error calling Anthropic API: {str(e)}")
 
     elif model == "claude-3.7-bedrock":
         response = manager.generate(

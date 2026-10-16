@@ -31,6 +31,8 @@ MODEL_SIZE_MAPPING = {
     "o3-high-azure": 256,
     "claude-3.5": 128,  # Estimated size
     "claude-3.7": 256,  # Estimated size
+    "claude-opus-5": 512,  # Estimated size
+    "gpt-5.6-sol": 512,  # Estimated size
     "claude-3.7-thinking-8k": 256,  # Estimated size
     "claude-3.7-thinking-16k": 256,  # Estimated size
     "claude-3.7-thinking-16k-bedrock": 256,  # Estimated size
@@ -46,6 +48,8 @@ MODEL_SIZE_MAPPING = {
 
 # Model name shortening mapping
 MODEL_SHORTNAMES = {
+    "claude-opus-5": "c-opus-5",
+    "gpt-5.6-sol": "gpt-5.6-sol",
     "deepseek-r1:7b": "ds_r1_7b",
     "deepseek-r1:14b": "ds_r1_14b",
     "deepseek-r1:32b": "ds_r1_32b",
@@ -96,6 +100,7 @@ OPENAI_MODELS = [
     "o3-low-azure",
     "o3-medium-azure",
     "o3-high-azure",
+    "gpt-5.6-sol",
 ]
 
 ANTHROPIC_MODELS = [
@@ -106,6 +111,7 @@ ANTHROPIC_MODELS = [
     "claude-3.7-thinking-16k-bedrock",
     "claude-3.7-thinking-32k-bedrock",
     "claude-3.7-thinking-64k-bedrock",
+    "claude-opus-5",
 ]
 
 MISTRAL_MODELS = ["mistral:latest"]
@@ -161,6 +167,8 @@ MODEL_FULLNAMES = {
     "claude-3.7-thinking-16k-bedrock": "Claude 3.7 Sonnet Thinking 16k",
     "claude-3.7-thinking-32k-bedrock": "Claude 3.7 Sonnet Thinking 32k",
     "claude-3.7-thinking-64k-bedrock": "Claude 3.7 Sonnet Thinking 64k",
+    "claude-opus-5": "Claude Opus 5",
+    "gpt-5.6-sol": "GPT-5.6 Sol",
     "abacus-gemini-2-5-pro": "Gemini 2.5 Pro",
     "top-5": "Top-5 Ensemble",
     "top-5-inverted-weighting": "Top-5 Inverted Weighting",
@@ -194,6 +202,8 @@ REASONING_MODELS = [
     "deepseek-r1:14b",
     "deepseek-r1:32b",
     "deepseek-r1-abacus",
+    "claude-opus-5",
+    "gpt-5.6-sol",
 ]
 
 # Provider color mapping

@@ -5,9 +5,20 @@ from itertools import product
 from get_args import get_user_choices
 import json
 import sys
+import threading
 import time
 import os
 from sciaidanbench_questions_dict import sci_questions
+
+# Guards every mutation and serialisation of the shared results dict. Re-entrant
+# so a thread holding it while recording an answer can also trigger a save.
+_save_lock = threading.RLock()
+_last_checkpoint = [0.0]
+CHECKPOINT_INTERVAL_SECONDS = 30
+
+# Worker threads only ever see a subdomain-scoped slice of the results, but
+# saving needs the whole tree, so run_benchmark publishes the root here.
+_root_results = [None]
 
 
 def run_benchmark(
@@ -33,6 +44,8 @@ def run_benchmark(
 
     with open(results_file, "r") as f:
         results = json.load(f)
+
+    _root_results[0] = results
 
     start_time = time.time()
 
@@ -162,6 +175,7 @@ def _run_multithreaded(
                     use_llm,
                     results,
                     thresholds,
+                    results_file,
                 )
                 for question, model, temp in model_tasks
             ]
@@ -206,6 +220,7 @@ def _run_sequential(
                     use_llm,
                     results,
                     thresholds,
+                    results_file,
                 )
             except Exception as e:
                 print(
@@ -215,8 +230,23 @@ def _run_sequential(
         _save_results(results, results_file)
 
 
+def _record_answer(accumulated, answer_data, results_file):
+    with _save_lock:
+        accumulated.append(answer_data)
+        if time.time() - _last_checkpoint[0] >= CHECKPOINT_INTERVAL_SECONDS:
+            _last_checkpoint[0] = time.time()
+            _save_results(_root_results[0], results_file)
+
+
 def _process_question(
-    question, model_name, temperature, chain_of_thought, use_llm, results, thresholds
+    question,
+    model_name,
+    temperature,
+    chain_of_thought,
+    use_llm,
+    results,
+    thresholds,
+    results_file,
 ):
     # Get the model's results dict, creating nested structure if needed
     model_results = (
@@ -234,6 +264,12 @@ def _process_question(
     # Get previous answers if they exist, otherwise empty list
     previous_answers = model_results.get(question, [])
 
+    # published into the results dict up front so checkpoints capture answers
+    # from questions that are still in flight
+    accumulated = list(previous_answers)
+    with _save_lock:
+        model_results[question] = accumulated
+
     new_answers = benchmark_question(
         question,
         model_name,
@@ -242,10 +278,12 @@ def _process_question(
         chain_of_thought,
         use_llm,
         thresholds,
+        lambda answer_data: _record_answer(accumulated, answer_data, results_file),
     )
 
     # Store results
-    model_results[question] = previous_answers + new_answers
+    with _save_lock:
+        model_results[question] = previous_answers + new_answers
 
 
 def _should_skip_question(
@@ -272,6 +310,11 @@ def _should_skip_question(
 
 
 def _save_results(results: dict, results_file: str) -> None:
+    with _save_lock:
+        _save_results_locked(results, results_file)
+
+
+def _save_results_locked(results: dict, results_file: str) -> None:
     # Read existing results first to prevent overwrites
     if os.path.exists(results_file):
         with open(results_file, "r") as f:
@@ -299,8 +342,11 @@ def _save_results(results: dict, results_file: str) -> None:
 
         results = existing_results
 
-    with open(results_file, "w") as f:
+    # write-then-rename so a kill mid-write cannot truncate the previous results
+    tmp_file = f"{results_file}.tmp"
+    with open(tmp_file, "w") as f:
         json.dump(results, f, indent=2)
+    os.replace(tmp_file, results_file)
 
 
 def _can_skip_question(

@@ -6,8 +6,15 @@ from aidanbench_question_list import questions
 from get_args import get_user_choices
 import json
 import sys
+import threading
 import time
 import os
+
+# Guards every mutation and serialisation of the shared results dict. Re-entrant
+# so a thread holding it while recording an answer can also trigger a save.
+_save_lock = threading.RLock()
+_last_checkpoint = [0.0]
+CHECKPOINT_INTERVAL_SECONDS = 30
 
 
 def run_benchmark(
@@ -21,6 +28,11 @@ def run_benchmark(
     thresholds: dict = None
 ) -> None:
     questions_to_use = questions[:num_questions] if num_questions else questions
+
+    results_dir = os.path.dirname(results_file)
+    if results_dir and not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+        print(f"Created results directory: {results_dir}")
 
     # Create results file if it doesn't exist
     if not os.path.exists(results_file):
@@ -96,7 +108,8 @@ def _run_multithreaded(model_params, chain_of_thought, use_llm, results, results
             active_models.append(model)
             model_futures = [
                 executor.submit(_process_question, question, model, temp,
-                                chain_of_thought, use_llm, results, thresholds)
+                                chain_of_thought, use_llm, results, thresholds,
+                                results_file)
                 for question, model, temp in model_tasks
             ]
             all_futures.extend(model_futures)
@@ -131,7 +144,8 @@ def _run_sequential(model_params, chain_of_thought, use_llm, results, results_fi
         for question, model, temp in model_tasks:
             try:
                 _process_question(question, model, temp,
-                                  chain_of_thought, use_llm, results, thresholds)
+                                  chain_of_thought, use_llm, results, thresholds,
+                                  results_file)
             except Exception as e:
                 print(
                     f"{Fore.RED}Error for {model} (temp={temp}): {e}{Style.RESET_ALL}")
@@ -139,7 +153,15 @@ def _run_sequential(model_params, chain_of_thought, use_llm, results, results_fi
         _save_results(results, results_file)
 
 
-def _process_question(question, model_name, temperature, chain_of_thought, use_llm, results, thresholds):
+def _record_answer(accumulated, answer_data, results, results_file):
+    with _save_lock:
+        accumulated.append(answer_data)
+        if time.time() - _last_checkpoint[0] >= CHECKPOINT_INTERVAL_SECONDS:
+            _last_checkpoint[0] = time.time()
+            _save_results(results, results_file)
+
+
+def _process_question(question, model_name, temperature, chain_of_thought, use_llm, results, thresholds, results_file):
     # Get the model's results dict, creating nested structure if needed
     model_results = results.setdefault('models', {}).setdefault(
         model_name, {}).setdefault(str(temperature), {})
@@ -153,6 +175,12 @@ def _process_question(question, model_name, temperature, chain_of_thought, use_l
     # Get previous answers if they exist, otherwise empty list
     previous_answers = model_results.get(question, [])
 
+    # published into the results dict up front so checkpoints capture answers
+    # from questions that are still in flight
+    accumulated = list(previous_answers)
+    with _save_lock:
+        model_results[question] = accumulated
+
     new_answers = benchmark_question(
         question,
         model_name,
@@ -160,11 +188,14 @@ def _process_question(question, model_name, temperature, chain_of_thought, use_l
         [a['answer'] for a in previous_answers],
         chain_of_thought,
         use_llm,
-        thresholds
+        thresholds,
+        lambda answer_data: _record_answer(
+            accumulated, answer_data, results, results_file)
     )
 
     # Store results
-    model_results[question] = previous_answers + new_answers
+    with _save_lock:
+        model_results[question] = previous_answers + new_answers
 
 
 def _should_skip_question(previous_answers: list[dict], use_llm: bool, thresholds: dict) -> bool:
@@ -190,8 +221,12 @@ def _should_skip_question(previous_answers: list[dict], use_llm: bool, threshold
 
 
 def _save_results(results: dict, results_file: str) -> None:
-    with open(results_file, 'w') as f:
-        json.dump(results, f, indent=2)
+    with _save_lock:
+        # write-then-rename so a kill mid-write cannot truncate the previous results
+        tmp_file = f"{results_file}.tmp"
+        with open(tmp_file, 'w') as f:
+            json.dump(results, f, indent=2)
+        os.replace(tmp_file, results_file)
 
 
 def _can_skip_question(results: dict, question: str, model_name: str, temperature: float, use_llm: bool, thresholds: dict) -> bool:
@@ -207,7 +242,7 @@ def _can_skip_question(results: dict, question: str, model_name: str, temperatur
 if __name__ == "__main__":
     try:
         # _validate_environment()
-        choices = get_user_choices()
+        choices = get_user_choices("../results_aidanbench")
         run_benchmark(**choices)
     except KeyboardInterrupt:
         print(f"\n{Fore.YELLOW}Benchmark interrupted. Exiting...{Style.RESET_ALL}")

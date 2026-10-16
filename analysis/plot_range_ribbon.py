@@ -60,11 +60,10 @@ def create_range_ribbon_table(
     y_positions = np.arange(num_models)
     bar_width = 0.65
 
-    # Font sizes — oversized so they remain readable after LaTeX scales
-    # the figure down to \textwidth (~6.5in from ~20in = ~3x shrink)
-    # Scaled ~3x from continuous_distribution (22-24pt) to compensate
-    # for the wider figure (38in vs ~13in) being shrunk to same \textwidth'=
-    SCALE = 1.75 # try 1.2–1.5
+    # Font sizes — sized so the figure stays readable once LaTeX scales it down
+    # to ~\textwidth. Dimensions and DPI are tuned to keep the final PNG under
+    # arXiv's 34 MP limit while preserving visual quality.
+    SCALE = 0.55
 
     HEADER_FS = int(72 * SCALE)
     MODEL_FS = int(64 * SCALE)
@@ -74,11 +73,9 @@ def create_range_ribbon_table(
     XLABEL_FS = int(70 * SCALE)
 
     # Figure sizing
-    row_height = 2.6
-    fig_height = max(40, num_models * row_height + 8)
-    # fig_width = 80
-
-    fig_width = 105
+    row_height = 0.82
+    fig_height = max(12, num_models * row_height + 2.5)
+    fig_width = 33
 
     fig = plt.figure(figsize=(fig_width, fig_height))
 
@@ -144,18 +141,18 @@ def create_range_ribbon_table(
         bar_length = d['max'] - d['min']
         ax_ribbon.barh(
             y_positions[i], bar_length, left=d['min'], height=bar_width,
-            color=d['color'], alpha=0.7, edgecolor='black', linewidth=3,
+            color=d['color'], alpha=0.7, edgecolor='black', linewidth=1.5,
         )
         # Mean marker
         ax_ribbon.plot(
             [d['mean'], d['mean']],
             [y_positions[i] - bar_width / 2, y_positions[i] + bar_width / 2],
-            'k-', linewidth=6, zorder=5,
+            'k-', linewidth=3, zorder=5,
         )
 
     ax_ribbon.set_xlim(0, x_max)
     ax_ribbon.set_ylim(y_positions[-1] + 0.5, y_positions[0] - 0.5)
-    ax_ribbon.set_xlabel("Response Counts", fontsize=XLABEL_FS)
+    ax_ribbon.set_xlabel("Response Counts", fontsize=XLABEL_FS, fontweight='bold')
     ax_ribbon.tick_params(axis='x', which='major', labelsize=TICK_FS)
     ax_ribbon.tick_params(axis='y', left=False, labelleft=False)
     ax_ribbon.set_yticks([])
@@ -186,7 +183,7 @@ def create_range_ribbon_table(
 
     # Draw horizontal separator line under headers
     for ax in [ax_name, ax_short, ax_ribbon, ax_avg]:
-        ax.axhline(y=-0.5, color='black', linewidth=4, clip_on=False)
+        ax.axhline(y=-0.5, color='black', linewidth=2, clip_on=False)
 
     # Light alternating row shading
     for i in range(num_models):
@@ -197,7 +194,7 @@ def create_range_ribbon_table(
             )
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.savefig(output_path, dpi=200, bbox_inches="tight")
     print(f"Table ribbon plot saved to {output_path}")
     plt.close(fig)
 

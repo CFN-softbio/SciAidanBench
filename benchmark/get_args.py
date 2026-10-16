@@ -1,10 +1,11 @@
 from colorama import Fore, Style
 from datetime import datetime
 import os
+import re
 from model_list import models, meta_models
 from ollama_utils import display_ollama_models_list
 
-RESULTS_DIR = "../results_sciaidanbench"
+RESULTS_DIR = "../results"
 
 DEFAULT_THRESHOLDS = {
     "coherence_score": 15,
@@ -17,27 +18,30 @@ PROMPT_COLOR = Fore.CYAN
 ERROR_COLOR = Fore.RED + Style.BRIGHT
 
 
-def _generate_results_filename(model_names: list[str]) -> str:
-    """Generate a unique results filename with model names and timestamp."""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+def _generate_results_filename(model_names: list[str], results_dir: str) -> str:
+    """Path to write results to.
 
+    A single-model run writes to the stable per-model file the analysis scripts
+    already consume, so re-running the same model resumes it instead of starting
+    an empty file. Multi-model runs can't follow that layout, so they fall back
+    to a timestamped combined file.
+    """
     if len(model_names) == 1:
-        model_part = model_names[0]
-    else:
-        # For multiple models, use first model + count
-        model_part = f"{model_names[0]}_and_{len(model_names) - 1}_others"
+        # matches results/split_results.py so names line up with existing chunks
+        model_part = re.sub(r"[^\w.-]+", "_", model_names[0])
+        return f"{results_dir}/per_model/model_{model_part}.json"
 
-    # Sanitize model name for filename (replace problematic characters)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    model_part = f"{model_names[0]}_and_{len(model_names) - 1}_others"
     model_part = model_part.replace("/", "-").replace(":", "-")
-
-    return f"{RESULTS_DIR}/results_{model_part}_{timestamp}.json"
+    return f"{results_dir}/results_{model_part}_{timestamp}.json"
 
 
 def _clear_screen():
     os.system("clear" if os.name != "nt" else "cls")
 
 
-def get_user_choices() -> dict[str, any]:
+def get_user_choices(results_dir: str = RESULTS_DIR) -> dict[str, any]:
     choices = {}
 
     _clear_screen()
@@ -70,9 +74,11 @@ def get_user_choices() -> dict[str, any]:
     print(f"{SECTION_COLOR}=== Additional Configuration ==={Style.RESET_ALL}\n")
     choices["chain_of_thought"] = False
     choices["use_llm"] = True
-    choices["multithreaded"] = False
+    choices["multithreaded"] = True
     choices["num_questions"] = None
-    choices["results_file"] = _generate_results_filename(choices["model_names"])
+    choices["results_file"] = _generate_results_filename(
+        choices["model_names"], results_dir
+    )
 
     return choices
 

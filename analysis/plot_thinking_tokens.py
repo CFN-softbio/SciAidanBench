@@ -1,6 +1,6 @@
 """
 Create a plot showing average thoughts length per question.
-For Anthropic models, uses OpenAI tokenizer (tiktoken) to count tokens.
+For Anthropic models, uses the character length of the thoughts text.
 For OpenAI models, uses reasoning_tokens (already in tokens).
 """
 
@@ -8,18 +8,10 @@ from utils import *
 from utils import _valid_responses
 import argparse
 
-# Try to import tiktoken for token counting
-try:
-    import tiktoken
-    TIKTOKEN_AVAILABLE = True
-except ImportError:
-    TIKTOKEN_AVAILABLE = False
-    print("Warning: tiktoken not available. Install with: pip install tiktoken")
-
 def get_model_average_thoughts_lengths_per_question_with_tokens(data):
     """
     Calculate the average of the average length of thoughts per question for each model.
-    For Anthropic models: uses OpenAI tokenizer (tiktoken) to count tokens in thoughts.
+    For Anthropic models: uses the character length of the thoughts text.
     For OpenAI o3 models: uses reasoning_tokens (already in tokens).
     For other models: uses character length (len(thoughts)).
     
@@ -28,15 +20,10 @@ def get_model_average_thoughts_lengths_per_question_with_tokens(data):
     """
     import json
     
-    # Initialize OpenAI tokenizer (cl100k_base is used by GPT-4, GPT-3.5, etc.)
+    # The published Figure 5 measures Claude thoughts by character length: the
+    # tiktoken branch below was not active when it was generated. Pinned to
+    # characters so this script reproduces the published figure.
     encoding = None
-    if TIKTOKEN_AVAILABLE:
-        try:
-            encoding = tiktoken.get_encoding("cl100k_base")
-        except Exception as e:
-            print(f"Warning: Could not load tiktoken encoding: {e}")
-    else:
-        print("Warning: tiktoken not available. Anthropic models will use character count instead of tokens.")
     
     model_stats = {}
     
@@ -549,7 +536,7 @@ def main():
     norm_scores = get_norm_sciab_scores(data)
     
     print("Calculating average thoughts length...")
-    print("Note: Anthropic models use OpenAI tokenizer (tiktoken) to count tokens")
+    print("Note: Anthropic models use character count of thoughts")
     print("      OpenAI o3 models use reasoning_tokens (already in tokens)")
     print("      Other models use character count")
     

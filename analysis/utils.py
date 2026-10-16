@@ -262,16 +262,16 @@ def create_scatter_plot_only(
                         y=y_plot,
                         arrowprops=dict(
                             arrowstyle='-',
-                            color='gray',
-                            lw=0.8,
-                            alpha=0.8,
-                            shrinkA=10,  # Large shrinkA to prevent arrows striking through text
-                            shrinkB=10   # Large shrinkB to prevent arrows striking through text
+                            color='dimgray',
+                            lw=1.0,
+                            alpha=0.9,
+                            shrinkA=16,  # generous gap so the line never strikes through the label
+                            shrinkB=3    # but let it reach the marker, so pairing is unambiguous
                         ),
                         expand_points=(6.0, 6.0),  # Very large expansion to move labels to white space
                         force_points=0.01,  # Extremely low force to allow maximum movement away from points
                         force_text=0.95,    # Very high force to avoid text overlap
-                        lim=3000,          # Many iterations for optimal positioning
+                        iter_lim=3000,     # fixed iteration count (not a time limit) so layout is repeatable
                         avoid_points=True,  # Avoid overlapping with data points
                         avoid_text=True,    # Avoid overlapping with other text
                         only_move={'points': 'xy', 'text': 'xy'}  # Allow movement in both x and y directions

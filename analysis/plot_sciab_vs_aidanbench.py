@@ -49,6 +49,8 @@ def get_norm_ab_scores(models_order, nab_data=None):
         "o3-mini-high",
         "o3-mini-low",
         "deepseek-r1-abacus",
+        "claude-opus-5",
+        "gpt-5.6-sol",
     ]
 
 
@@ -83,6 +85,8 @@ def get_norm_ab_scores(models_order, nab_data=None):
         4984,
         2363,
         1505,
+        2074,  # claude-opus-5
+        3329,  # gpt-5.6-sol
     ]
 
     # ab_scores =
@@ -117,7 +121,7 @@ def main():
         "--output-dir",
         type=str,
         default="../plots/sciab_vs_aidanbench.png",
-        help="Directory to save results",
+        help="Path to save the figure",
     )
     args = parser.parse_args()
 
@@ -134,16 +138,56 @@ def main():
 
     ordered_nab_scores = get_norm_ab_scores(model_order)
 
-    create_scatter_plot_only(
+    out_path = args.output_dir
+    fig, ax = create_scatter_plot_only(
         ordered_nab_scores,
         ordered_sciab_scores,
         title="Normal AB vs SciAB (Average number of responses per question)",
         x_label="Normal AB Scores (65 questions)",
         y_label="SciAB Scores (155 questions)",
-        save_path="../plots/sciab_vs_aidanbench.png",
+        save_path=None,
         add_labels=True,
         labels=model_order,
     )
+
+    # claude-3.7 and claude-opus-5 score almost identically, so their markers nearly
+    # coincide and the automatic placement leaves the labels ambiguous. Pin these two
+    # apart by hand; the connector lines follow the text, keeping the pairing clear.
+    from model_config import get_model_shortname
+
+    manual = {"c3.7": (23.0, 13.0), "c-opus-5": (40.0, 13.5), "gpt-5.6-sol": (57.0, 20.5)}
+    points = {
+        get_model_shortname(m): (x, y)
+        for m, x, y in zip(model_order, ordered_nab_scores, ordered_sciab_scores)
+        if x is not None and y is not None
+    }
+    moved = []
+    for txt in ax.texts:
+        name = txt.get_text()
+        if name in manual:
+            txt.set_position(manual[name])
+            px, py = points[name]
+            moved.append((px, py))
+            # the c3.7 circle covers the centre of the opus square, so a line to the
+            # centre looks like it ends on the circle; aim at the square's uncovered
+            # lower-right instead (the line sits under the square, stopping at its edge)
+            tx, ty = (33.0, 17.6) if name == "c-opus-5" else (px, py)
+            ax.plot([manual[name][0], tx], [manual[name][1], ty],
+                    color="dimgray", lw=0.9, alpha=0.9, zorder=4)
+
+    # adjustText draws its connectors as separate empty Annotations anchored on the
+    # data point. Moving the label above leaves those pointing at nothing, so drop the
+    # ones belonging to the labels we repositioned.
+    from matplotlib.text import Annotation
+
+    for artist in list(ax.texts):
+        if isinstance(artist, Annotation) and not artist.get_text().strip():
+            if any(abs(artist.xy[0] - px) < 1e-6 and abs(artist.xy[1] - py) < 1e-6
+                   for px, py in moved):
+                artist.remove()
+
+    fig.savefig(out_path, dpi=300, bbox_inches="tight")
+    print(f"Figure saved to {out_path}")
 
 
 if __name__ == "__main__":

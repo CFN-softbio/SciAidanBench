@@ -168,6 +168,9 @@ def create_continuous_plot(results: Dict[str, Dict[int, int]], output_file: str 
     fig, ax = plt.subplots(figsize=(10, 7))
 
     texts = []
+    # Colours come from the provider, so two models from the same provider would be
+    # indistinguishable; dash the second and third occurrence of a colour.
+    colour_uses = {}
     # For each model, create smooth probability density curve
     for model in models:
         # Get the distribution data
@@ -186,7 +189,10 @@ def create_continuous_plot(results: Dict[str, Dict[int, int]], output_file: str 
             y_smooth = kde(x_smooth)
 
             # Plot the smooth probability density curve
-            ax.plot(x_smooth, y_smooth, color=get_model_color(model),
+            colour = get_model_color(model)
+            style = ["-", "--", ":"][colour_uses.get(colour, 0) % 3]
+            colour_uses[colour] = colour_uses.get(colour, 0) + 1
+            ax.plot(x_smooth, y_smooth, color=colour, linestyle=style,
                    linewidth=5, alpha=0.8)
 
             # Find a label position on the right-side descent at ~50% of peak height

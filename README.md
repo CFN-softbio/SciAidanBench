@@ -2,7 +2,9 @@
 
 A benchmark for evaluating the **scientific creativity** of Large Language Models. Given an open-ended scientific question, SciAidanBench measures how many diverse, novel, and coherent responses a model can generate before exhausting its creative capacity.
 
-This repository accompanies our paper *LLM Jaggedness Unlocks Scientific Creativity*, which evaluates 19 base models across 8 providers (30 total configurations including reasoning variants).
+This repository accompanies our paper *LLM Jaggedness Influences Scientific Creativity* (Digital Discovery, 2026), which evaluates 21 base models across 8 providers (32 configurations including reasoning variants), plus four meta-model ensembles.
+
+The exact version of the code and data used in the paper is archived on Zenodo: https://doi.org/[ZENODO DOI]
 
 ## How It Works
 
@@ -49,29 +51,34 @@ SciAidanBench/
 │   ├── get_args.py / get_args_meta.py          # CLI argument parsing
 │   ├── prompts.py                      # LLM prompt templates (gen_answer, judges)
 │   ├── models.py                       # Provider API integrations
-│   ├── model_list.py                   # Model routing (thinking vs. non-thinking, etc.)
+│   ├── model_list.py                   # Models to run, and which return reasoning traces
 │   ├── meta_model_utils.py             # Top-5-parallel selection logic
 │   ├── ollama_utils.py                 # Ollama helpers
 │   ├── sciaidanbench_questions.py      # SciAidanBench question lists (by domain)
 │   ├── sciaidanbench_questions_dict.py # SciAidanBench questions organized by domain
 │   └── aidanbench_question_list.py     # AidanBench (general creativity) questions
 │
-├── analysis/                           # Paper figure scripts
-│   ├── plot_spider_top5.py             # → plots/spider_top5.png
-│   ├── plot_spider_router.py           # → plots/spider_router.png
-│   ├── plot_thinking_tokens.py         # → plots/thinking_tokens.png
-│   ├── plot_sciab_vs_aidanbench.py     # → plots/sciab_vs_aidanbench.png
-│   ├── plot_range_ribbon.py            # → plots/range_ribbon.png
-│   ├── plot_response_distribution.py   # → plots/response_distribution_*.png
+├── analysis/                           # Paper figure and table scripts
+│   ├── plot_sciab_vs_aidanbench.py     # Figure 1  → plots/sciab_vs_aidanbench.png
+│   ├── plot_range_ribbon.py            # Figure 2  → plots/range_ribbon.png
+│   ├── plot_response_distribution.py   # Figure 3  → plots/response_distribution_*.png
+│   ├── plot_spider_top5.py             # Figure 4  → plots/spider_top5.png
+│   ├── plot_thinking_tokens.py         # Figure 5  → plots/thinking_tokens.png
+│   ├── plot_spider_router.py           # Figure 6  → plots/spider_router.png
+│   ├── plot_spider_new_models.py       # Figure S1 → plots/spider_new_models.png
+│   ├── threshold_sensitivity.py        # Tables S2 and S3 (printed)
+│   ├── plot_toc_graphic.py             # Table of contents graphic → plots/toc_graphic.png
 │   ├── model_config.py                 # Shared: provider colors, short names, markers
 │   └── utils.py                        # Shared: score / response-count helpers
 │
-├── plots/                              # Paper-ready figures
+├── plots/                              # Figures as published
 ├── results/
-│   ├── per_model/                      # Per-model JSON chunks (committed to git)
+│   ├── per_model/                      # Per-model SciAidanBench results
 │   ├── split_results.py                # Split results_final.json → per_model/
 │   └── merge_results.py                # Merge per_model/ → results_final.json
+├── results_aidanbench/per_model/       # AidanBench runs for Claude Opus 5 and GPT-5.6 Sol
 ├── dashboard.py                        # Streamlit results explorer
+├── requirements.txt
 └── README.md
 ```
 
@@ -79,9 +86,10 @@ SciAidanBench/
 
 ### Dependencies
 
+Python 3.12. `requirements.txt` pins the versions used for the paper:
+
 ```bash
-pip install openai anthropic boto3 numpy scipy matplotlib adjustText colorama retry abacusai tiktoken
-pip install git+https://github.com/Shray64/LLM_Manager.git
+pip install -r requirements.txt
 ```
 
 [`LLM_Manager`](https://github.com/Shray64/LLM_Manager) is a thin routing wrapper used throughout `benchmark/models.py` to dispatch calls to the correct provider (OpenAI / Azure / Anthropic / Bedrock / Ollama).
@@ -94,27 +102,39 @@ Set API keys for the providers you intend to use:
 # OpenAI
 export OPENAI_API_KEY="..."
 
-# Azure OpenAI 
+# Azure OpenAI (o3, GPT-5.6 Sol, embeddings)
 export AZURE_API_KEY="..."
 export AZURE_API_BASE="https://your-resource.openai.azure.com/"
-export AZURE_API_KEY="..."
 
-# AWS Bedrock 
+# Anthropic (Claude 3.5 Sonnet, Claude 3.7 Sonnet)
+export ANTHROPIC_API_KEY="..."
+
+# Azure AI Foundry, Anthropic endpoint (Claude Opus 5)
+export ANTHROPIC_FOUNDRY_API_KEY="..."
+export ANTHROPIC_FOUNDRY_BASE_URL="https://your-resource.services.ai.azure.com/anthropic"
+
+# AWS Bedrock (Claude 3.7 Sonnet Thinking 16k/32k/64k)
 export AWS_ACCESS_KEY_ID="..."
 export AWS_SECRET_ACCESS_KEY="..."
 export AWS_REGION=""
 
-# AbacusAI 
+# AbacusAI (Gemini 2.5 Pro, DeepSeek-R1)
 export ABACUS_API_KEY="..."
+```
+
+Local models are served through [Ollama](https://ollama.com).
 
 ## Running the Benchmark
 
-Single model:
+Uncomment the models to run in `benchmark/model_list.py`, then:
 
 ```bash
 cd benchmark
-python main_sciaidanbench.py
+python main_sciaidanbench.py   # SciAidanBench
+python main_aidanbench.py      # AidanBench (general creativity)
 ```
+
+A single-model run writes to `results/per_model/model_<name>.json` and resumes from it if re-run.
 
 Meta-model ensembles (e.g. `top-5-parallel`):
 
@@ -149,21 +169,27 @@ To go the other way (after re-running the benchmark on a model), regenerate the 
 python results/split_results.py
 ```
 
-Then generate all figures:
+Then generate the figures and tables:
 
 ```bash
 cd analysis
 python plot_sciab_vs_aidanbench.py  # Figure 1
 python plot_range_ribbon.py         # Figure 2
-python plot_response_distribution.py --continuous results/results_final.json \  #Figure 3
-       claude-3.7-thinking-16k-bedrock qwen2:latest openai/4o
+python plot_response_distribution.py --continuous ../results/results_final.json \
+       claude-3.7-thinking-16k-bedrock qwen2.5:latest openai/4o   # Figure 3
 python plot_spider_top5.py          # Figure 4
 python plot_thinking_tokens.py      # Figure 5
 python plot_spider_router.py        # Figure 6
-
+python plot_spider_new_models.py    # Figure S1
+python threshold_sensitivity.py     # Tables S2 and S3
+python plot_toc_graphic.py          # Table of contents graphic
 ```
 
-All outputs land in `plots/`.
+All figures land in `plots/`, which holds the versions as published. Notes:
+
+- The AidanBench scores on the x-axis of Figure 1 are listed in `plot_sciab_vs_aidanbench.py`. The runs for Claude Opus 5 and GPT-5.6 Sol are in `results_aidanbench/per_model/`.
+- Figure 1 labels are placed by adjustText. Regenerating it is repeatable, but a few labels may sit slightly differently from the published figure; the data are identical.
+- In Figure 5, reasoning length for Claude models is the character length of the returned thinking text; for o3 models it is the API-reported `reasoning_tokens`.
 
 ## Interactive Dashboard
 
@@ -212,14 +238,15 @@ The dashboard has tabs for:
 }
 ```
 
-The top-level key `"0.7"` is the sampling temperature, and the list under each question holds all accepted responses in order of generation.
+The key `"0.7"` is the sampling temperature. The list under each question holds every response in order of generation; the last one, whose `stopping_condition` names the threshold it failed, ended the run and is not counted in the score.
 
 ## Citation
 
 ```bibtex
 @article{mathur2026sciaidanbench,
-  title   = {Exploring the Jagged Frontier of Scientific Creativity in LLMs},
-  author  = {Mathur, Shray and ...},
+  title   = {LLM Jaggedness Influences Scientific Creativity},
+  author  = {Mathur, Shray and Boscoboinik, J. Anibal and Tsai, Esther H. R. and Yager, Kevin G.},
+  journal = {Digital Discovery},
   year    = {2026}
 }
 ```

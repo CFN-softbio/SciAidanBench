@@ -65,8 +65,10 @@ synchrotron = [
     "Invent a new x-ray detector technology for soft x-rays, that improves upon the current state-of-the-art.",
     "Name an effect that limits the coherence, or introduces decoherence, at a coherent x-ray scattering beamline.",
     "How to accurately do peak labelling in X-ray diffraction or scattering peaks for polymorphs or mixed materials?",
-    "How to expand the temporal resolution for existing characterization methods to study dynamics that are faster?",
-    "How to do efficient energy scans or spatial scans in X-ray characterization methods?",
+    # Added after the main sweep, so only o3-high-azure ever ran these. Excluded
+    # to keep every model on the same 155 questions.
+    # "How to expand the temporal resolution for existing characterization methods to study dynamics that are faster?",
+    # "How to do efficient energy scans or spatial scans in X-ray characterization methods?",
 ]
 
 chemistry = [

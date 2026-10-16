@@ -15,6 +15,7 @@ def benchmark_question(
     chain_of_thought: bool = False,
     use_llm: bool = False,
     thresholds: dict = None,
+    on_answer=None,
 ):
     start_time = time.time()
     answer_num = len(previous_answers) + 1
@@ -26,6 +27,7 @@ def benchmark_question(
         try:
             print("Generating next answer")
 
+            gen_start = time.time()
             if model_name in THINKING_MODELS:
                 new_answer, thoughts, reasoning_tokens = gen_answer(
                     question, previous_answers, model_name, chain_of_thought
@@ -34,6 +36,7 @@ def benchmark_question(
                 new_answer = gen_answer(
                     question, previous_answers, model_name, chain_of_thought
                 )
+            generation_time = time.time() - gen_start
 
             print("Checking Coherence")
             coherence_score = judge_answer(question, new_answer, model_name="o1-mini")
@@ -66,6 +69,9 @@ def benchmark_question(
                     "reasoning_tokens": reasoning_tokens,
                     "embedding_dissimilarity_score": embedding_novelty_score,
                     "coherence_score": coherence_score,
+                    # time for the model call alone; processing_time is cumulative
+                    # since the question started, kept as-is for continuity
+                    "generation_time": generation_time,
                     "processing_time": time.time() - start_time,
                     "stopping_condition": stopping_condition,
                 }
@@ -75,6 +81,7 @@ def benchmark_question(
                     "answer": new_answer,
                     "embedding_dissimilarity_score": embedding_novelty_score,
                     "coherence_score": coherence_score,
+                    "generation_time": generation_time,
                     "processing_time": time.time() - start_time,
                     "stopping_condition": stopping_condition,
                 }
@@ -85,11 +92,17 @@ def benchmark_question(
             new_answers_data.append(answer_data)
             previous_answers.append(new_answer)
 
+            # persist immediately: a deep question can run for hours, and any
+            # answers still held in memory are lost if the process dies
+            if on_answer:
+                on_answer(answer_data)
+
             print(
                 f"Using {model_name} with temperature {temperature}\n"
                 f"{Fore.CYAN}Question: {question}{Style.RESET_ALL}\n"
                 f"{Fore.GREEN}Answer #{answer_num}: {new_answer}{Style.RESET_ALL}\n"
                 f"{Fore.MAGENTA}Coherence Score: {coherence_score}{Style.RESET_ALL}\n"
+                f"{Fore.YELLOW}Generation Time: {generation_time:.1f}s | Elapsed: {time.time() - start_time:.1f}s{Style.RESET_ALL}\n"
                 f"{Fore.BLUE}Embedding Dissimilarity Score: {embedding_novelty_score:.2f}{Style.RESET_ALL}\n"
                 f"{f'{Fore.BLUE}LLM Dissimilarity Score: {llm_novelty_score:.2f}{Style.RESET_ALL}' if use_llm else ''}\n"
             )

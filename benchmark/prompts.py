@@ -3,7 +3,7 @@ from models import chat_with_model
 from model_list import THINKING_MODELS
 
 # Models that return reasoning_tokens in addition to thoughts
-REASONING_TOKEN_MODELS = ["o3-low-azure", "o3-medium-azure", "o3-high-azure", "gpt-5-high", "gpt-5-low"]
+REASONING_TOKEN_MODELS = ["o3-low-azure", "o3-medium-azure", "o3-high-azure", "gpt-5-high", "gpt-5-low", "claude-opus-5", "gpt-5.6-sol"]
 
 
 def gen_answer(
